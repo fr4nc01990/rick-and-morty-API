@@ -1,0 +1,55 @@
+<div
+  class="flex items-center justify-between text-sm tracking-widest uppercase"
+>
+  <p class="text-gray-500 dark:text-gray-300">
+    CHARACTERS PAGE {{ currentPage() }}
+  </p>
+  <div class="flex items-center">
+    <p class="text-gray-500 dark:text-gray-300">Sort</p>
+    <select
+      class="font-medium text-gray-700 bg-transparent dark:text-gray-500 focus:outline-none"
+    >
+      <option value="#">Recommended</option>
+      <option value="#">Size</option>
+      <option value="#">Price</option>
+    </select>
+  </div>
+</div>
+<!--Cards-->
+<div
+  class="grid grid-cols-1 gap-1 mt-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+>
+  @for (character of characters(); track character.id) {
+
+  <app-card [character]="character" />
+
+  }
+</div>
+
+<!--Pagination
+flex items-center justify-center mt-10
+-->
+
+<div class="flex items-center justify-center mt-10">
+  <div class="flex justify-center items-center space-x-4">
+    <button
+      (click)="loadCharacters(-1)"
+      class="px-2 py-1 pb-2 text-1xl leading-6 text-white capitalize transition-colors duration-200 transform bg-gray-800 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-gray-700 cursor-pointer"
+    >
+      Back
+    </button>
+    <div class="text-slate-500">{{ currentPage() }}/ 24</div>
+    <button
+      (click)="loadCharacters(+1)"
+      class="px-2 py-1 pb-2 text-1xl leading-6 text-white capitalize transition-colors duration-200 transform bg-gray-800 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-gray-700 cursor-pointer"
+    >
+      Next
+    </button>
+    <button
+      (click)="loadCharacters()"
+      class="px-2 py-1 pb-2 text-1xl leading-6 text-white capitalize transition-colors duration-200 transform bg-gray-800 rounded-md hover:bg-blue-500 focus:outline-none focus:bg-gray-700 cursor-pointer"
+    >
+      asdaskdj
+    </button>
+  </div>
+</div>
