@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { Characters, Result } from '../interfaces/character.interface';
-import { CharactersByID } from '../interfaces/characterById';
+import { CharactersByID } from '../interfaces/characterById.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +24,9 @@ export class CharactersService {
   }
 
 
-  public loadCharacterById(id: string): Observable<CharactersByID> {
+  public loadCharacterById(id: number): Observable<CharactersByID> {
 
-    const url: string = `https://pokeapi.co/api/v2/pokemon/${id}`;
+    const url: string = `https://rickandmortyapi.com/api/character/${id}`;
 
     return this.http.get<CharactersByID>(url);
   }

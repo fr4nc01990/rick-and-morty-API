@@ -11,10 +11,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./layout/characters/pages/characters-page/characters.component')
             },
             {
-                path: 'characters/:id',
-                loadComponent: () => import('./layout/characters/pages/character-by-id/character-by-id.component')
-            },
-            {
                 path: 'episodes',
                 loadComponent: () => import('./layout/episodes/episodes.component')
             },
