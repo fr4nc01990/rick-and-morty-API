@@ -1,12 +1,10 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, tap } from 'rxjs';
 import { CardComponent } from '../../components/card/card.component';
-import { CharactersService } from '../../services/characters.service';
-import { Result } from '../../interfaces/character.interface';
 import { CommonModule } from '@angular/common';
-import { Title } from '@angular/platform-browser';
+import { Characters, Status } from '../../interfaces/character.interface';
+import { CharactersService } from '../../services/characters.service';
+
 
 
 @Component({
@@ -18,50 +16,60 @@ import { Title } from '@angular/platform-browser';
 })
 export default class CharactersComponent implements OnInit {
 
-  private characterService = inject(CharactersService);
-  public characters = signal<Result[]>([]);
+  public characters = signal<Characters | null>(null); // Aquí se cargan los resultados de la API
+  public page: number = 1; // Página inicial
+  public status?: string; // Parámetro opcional
 
-  private route = inject(ActivatedRoute);
+  private activeRoute = inject(ActivatedRoute);
+  private apiService = inject(CharactersService);
   private router = inject(Router);
-
-  private title = inject(Title);
-
-  public currentPage = toSignal<number>(
-    this.route.queryParamMap
-      .pipe(
-        map(params => params.get('page') ?? '1'),
-        map(page => (isNaN(+page)) ? 1 : +page),
-        map(page => Math.max(1, page))
-      )
-  );
+  public statusItems: Status[] = [Status.Alive, Status.Dead, Status.Unknown]
+  public pageNumber = signal<number>(1);
 
 
 
   ngOnInit(): void {
+    // Escuchar cambios en los queryParams
+    this.activeRoute.queryParams.subscribe((params) => {
+      this.page = +params['page'] || 1; // Si no hay 'page', empieza en 1
+      this.status = params['status']; // Si no hay 'status', será undefined
 
-
-
-    this.loadCharacters();
-
+      // Llamar al servicio con los parámetros actualizados
+      this.fetchCharacters(this.page, this.status);
+    });
 
   }
 
-  loadCharacters(page = 0) {
-
-    const pageToLoad = this.currentPage()! + page;
-
-    //console.log({ pageToLoad, currentPage: this.currentPage() });
-
-    this.characterService.loadPage(pageToLoad)
-      .pipe(
-        tap(() => this.router.navigate([], { queryParams: { page: pageToLoad } })),
-        tap(() => this.title.setTitle(`Rick and Morty - Page ${pageToLoad}`))
-      )
-      .subscribe((characters) => {
-
-        this.characters.set(characters);
-
-      })
+  fetchCharacters(page: number, status?: string) {
+    this.apiService.getCharacters(page, status).subscribe({
+      next: (response) => {
+        this.characters.set(response);
+      },
+      error: (error) => {
+        console.error('Error fetching characters:', error);
+      },
+    });
   }
+
+  navigateToPage(page: number) {
+    this.router.navigate([], {
+      relativeTo: this.activeRoute,
+      queryParams: { page, status: this.status },
+      queryParamsHandling: 'merge', // Mantiene los queryParams existentes
+    });
+  }
+
+
+  eventCapturedAndSetStatusFilter(select: EventTarget | null) {
+    const selectedStatus = (select as HTMLSelectElement).value;
+
+    this.router.navigate([], {
+      relativeTo: this.activeRoute,
+      queryParams: { page: 1, status: selectedStatus },
+      queryParamsHandling: 'merge',
+    });
+
+  }
+
 
 }

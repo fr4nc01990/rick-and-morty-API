@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-import { Characters, Result } from '../interfaces/character.interface';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Characters } from '../interfaces/character.interface';
 import { CharactersByID } from '../interfaces/characterById';
 
 @Injectable({
@@ -9,19 +9,27 @@ import { CharactersByID } from '../interfaces/characterById';
 })
 export class CharactersService {
 
-  private http = inject(HttpClient);
+  private baseUrl = 'https://rickandmortyapi.com/api/character'; // URL base de la API
 
-  public loadPage(page: number): Observable<Result[]> {
-    page = Math.max(1, page);
+  constructor(private http: HttpClient) { }
 
-    const url: string = `https://rickandmortyapi.com/api/character/?page=${page}`;
+  /**
+   * Realiza una solicitud GET para obtener personajes con paginación y filtro opcional.
+   * @param page Número de página (requerido).
+   * @param status Estado del personaje (opcional).
+   * @returns Observable con los datos de los personajes.
+   */
 
-    return this.http.get<Characters>(url)
-      .pipe(
-        map((resp) => resp.results)
-      );
+  getCharacters(page: number, status?: string): Observable<Characters> {
+    let params = new HttpParams().set('page', page.toString()); // Agregar el parámetro de página.
 
+    if (status) {
+      params = params.set('status', status); // Agregar el parámetro de estado si existe.
+    }
+
+    return this.http.get<Characters>(this.baseUrl, { params });
   }
+
 
 
   public loadCharacterById(id: string): Observable<CharactersByID> {
