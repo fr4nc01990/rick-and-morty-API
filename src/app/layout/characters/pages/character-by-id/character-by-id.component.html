@@ -1,1 +1,48 @@
-<p>character-by-id works!</p>
+<div
+  *ngIf="isVisible"
+  class="fixed inset-0 flex items-center justify-center bg-gray-500/75 z-10"
+  (click)="onBackdropClick()"
+>
+  <div class="mx-auto right-0 mt-2 w-60">
+    <div class="rounded overflow-hidden shadow-lg">
+      <div class="text-center p-6 bg-gray-800 border-b">
+        <img [src]="characterDetails()?.image" alt="" />
+        <p class="pt-2 text-lg font-semibold text-gray-50">
+          {{ characterDetails()?.name }}
+        </p>
+        <p class="text-sm text-blue-500">{{ characterDetails()?.type }}</p>
+        <p class="text-sm text-gray-100">
+          <span class="font-semibold">Created:</span>
+          {{ characterDetails()?.created | date : "d/M/yyyy" }}
+        </p>
+        <div class="mt-5"></div>
+        <button
+          (click)="onClose()"
+          class="bg-red-600 text-white px-4 py-1 rounded-lg hover:bg-red-500"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+  
+<div
+  class="bg-white rounded-lg shadow-lg p-6 w-96"
+  (click)="$event.stopPropagation()"
+>
+  <h3 class="text-lg font-semibold">{{ characterDetails()?.name }}</h3>
+  <img [src]="characterDetails()?.image" alt="" />
+  <p class="mt-2">{{ characterDetails()?.name }}</p>
+  <div class="mt-4 flex justify-end">
+    <button
+      (click)="onClose()"
+      class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500"
+    >
+      Close
+    </button>
+  </div>
+</div>
+-->
