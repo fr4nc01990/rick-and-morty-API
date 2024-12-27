@@ -5,8 +5,5 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './character-by-id.component.html',
-  styleUrl: './character-by-id.component.css'
 })
-export default class CharacterByIdComponent {
-
-}
+export default class CharacterByIdComponent {}

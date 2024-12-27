@@ -1,21 +1,24 @@
-import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  Signal,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
 import { CommonModule } from '@angular/common';
 import { Characters, Status } from '../../interfaces/character.interface';
 import { CharactersService } from '../../services/characters.service';
 
-
-
 @Component({
   selector: 'app-characters',
   standalone: true,
   imports: [CommonModule, CardComponent],
   templateUrl: './characters.component.html',
-  styleUrl: './characters.component.css'
 })
 export default class CharactersComponent implements OnInit {
-
   public characters = signal<Characters | null>(null); // Aquí se cargan los resultados de la API
   public page: number = 1; // Página inicial
   public status?: string; // Parámetro opcional
@@ -23,10 +26,8 @@ export default class CharactersComponent implements OnInit {
   private activeRoute = inject(ActivatedRoute);
   private apiService = inject(CharactersService);
   private router = inject(Router);
-  public statusItems: Status[] = [Status.Alive, Status.Dead, Status.Unknown]
+  public statusItems: Status[] = [Status.Alive, Status.Dead, Status.Unknown];
   public pageNumber = signal<number>(1);
-
-
 
   ngOnInit(): void {
     // Escuchar cambios en los queryParams
@@ -37,7 +38,6 @@ export default class CharactersComponent implements OnInit {
       // Llamar al servicio con los parámetros actualizados
       this.fetchCharacters(this.page, this.status);
     });
-
   }
 
   fetchCharacters(page: number, status?: string) {
@@ -59,7 +59,6 @@ export default class CharactersComponent implements OnInit {
     });
   }
 
-
   eventCapturedAndSetStatusFilter(select: EventTarget | null) {
     const selectedStatus = (select as HTMLSelectElement).value;
 
@@ -68,8 +67,5 @@ export default class CharactersComponent implements OnInit {
       queryParams: { page: 1, status: selectedStatus },
       queryParamsHandling: 'merge',
     });
-
   }
-
-
 }

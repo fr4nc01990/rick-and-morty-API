@@ -9,8 +9,6 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, TruncateWordsPipe, RouterLink],
   templateUrl: './card.component.html',
-  styles: ``,
-
 })
 export class CardComponent {
 
